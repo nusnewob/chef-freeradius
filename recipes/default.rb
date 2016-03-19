@@ -8,32 +8,18 @@
 #
 include_recipe "freeradius::#{node[:freeradius][:install_method]}"
 
-if node['freeradius']['enable_ldap'] == true
-  template "#{node['freeradius']['dir']}/mods-available/ldap" do
-    source "ldap.erb"
-    owner node['freeradius']['user']
-    group node['freeradius']['group']
-    mode 0600
-  end
+user_auth = Chef::EncryptedDataBagItem.load("mysql", node['freeradius']['db_name'])
+user_auth['mysql'].each do |user, passwd|
+  node.override['freeradius']['db_login'] = user
+  node.override['freeradius']['db_password'] = passwd
+end
 
-  link "#{node['freeradius']['dir']}/mods-enabled/ldap" do
-    to "#{node['freeradius']['dir']}/mods-available/ldap"
-    notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
-  end
+if node['freeradius']['enable_ldap'] == true
+  include_recipe "freeradius::ldap"
 end
 
 if node['freeradius']['enable_sql'] == true
-  template "#{node['freeradius']['dir']}/mods-available/sql" do
-    source "sql.erb"
-    owner node['freeradius']['user']
-    group node['freeradius']['group']
-    mode 0600
-  end
-
-  link "#{node['freeradius']['dir']}/mods-enabled/sql" do
-    to "#{node['freeradius']['dir']}/mods-available/sql"
-    notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
-  end
+  include_recipe "freeradius::sql"
 end
 
 template "#{node['freeradius']['dir']}/clients.conf" do
@@ -52,23 +38,9 @@ template "#{node['freeradius']['dir']}/radiusd.conf" do
   notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end
 
-template "#{node['freeradius']['dir']}/sites-available/default" do
-  source "default.erb"
-  owner node['freeradius']['user']
-  group node['freeradius']['group']
-  mode 0600
-  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
-end
-
-template "#{node['freeradius']['dir']}/sites-available/inner-tunnel" do
-  source "inner-tunnel.erb"
-  owner node['freeradius']['user']
-  group node['freeradius']['group']
-  mode 0600
-  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
-end
-
 service node['freeradius']['service'] do
-  supports :restart => true, :status => false, :reload => false
+  supports :restart => true, :status => true, :reload => true
   action [:enable, :start]
 end
+
+include_recipe "freeradius::vhost"

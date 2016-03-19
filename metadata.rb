@@ -12,3 +12,5 @@ end
 
 depends 'apt'
 depends 'yum'
+depends 'database'
+depends 'mysql2_chef_gem'

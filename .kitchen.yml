@@ -1,15 +1,19 @@
 ---
 driver:
-  name: vagrant
+  name: docker
 
 provisioner:
   name: chef_solo
 
 platforms:
-  - name: centos-5.11
-  - name: centos-6.6
-  - name: ubuntu-12.04
-  - name: ubuntu-14.10
+  - name: ubuntu
+    driver:
+      image: ubuntu:latest
+      platform: ubuntu
+  - name: centos
+    driver:
+      image: centos:latest
+      platform: centos
 
 suites:
   - name: default

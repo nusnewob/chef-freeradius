@@ -6,6 +6,7 @@
 
 <% node['freeradius']['clients'].each do |client, client_hash| %>
 client <%= client %> {
+  proto = <%= client_hash['proto']  %>
   ipaddr = <%= client_hash['ipaddr']  %>
   netmask = <%= client_hash['netmask'] %>
   secret = <%= client_hash['secret'] %>

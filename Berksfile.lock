@@ -1,0 +1,11 @@
+DEPENDENCIES
+  freeradius
+    path: .
+    metadata: true
+
+GRAPH
+  apt (3.0.0)
+  freeradius (1.0.1)
+    apt (>= 0.0.0)
+    yum (>= 0.0.0)
+  yum (3.10.0)

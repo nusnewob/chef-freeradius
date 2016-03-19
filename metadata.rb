@@ -9,3 +9,6 @@ version          "1.0.1"
 %w{ ubuntu centos debian }.each do |os|
   supports os
 end
+
+depends 'apt'
+depends 'yum'

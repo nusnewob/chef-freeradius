@@ -9,15 +9,31 @@
 include_recipe "freeradius::#{node[:freeradius][:install_method]}"
 
 if node['freeradius']['enable_ldap'] == true
-  include_recipe 'freeradius::ldap'
+  template "#{node['freeradius']['dir']}/mods-available/ldap" do
+    source "ldap.erb"
+    owner node['freeradius']['user']
+    group node['freeradius']['group']
+    mode 0600
+  end
+
+  link "#{node['freeradius']['dir']}/mods-enabled/ldap" do
+    to "#{node['freeradius']['dir']}/mods-available/ldap"
+    notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+  end
 end
 
-template "#{node['freeradius']['dir']}/sql.conf" do
-  source "sql.conf.erb"
-  owner node['freeradius']['user']
-  group node['freeradius']['group']
-  mode 0600
-  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+if node['freeradius']['enable_sql'] == true
+  template "#{node['freeradius']['dir']}/mods-available/sql" do
+    source "sql.erb"
+    owner node['freeradius']['user']
+    group node['freeradius']['group']
+    mode 0600
+  end
+
+  link "#{node['freeradius']['dir']}/mods-enabled/sql" do
+    to "#{node['freeradius']['dir']}/mods-available/sql"
+    notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+  end
 end
 
 template "#{node['freeradius']['dir']}/clients.conf" do

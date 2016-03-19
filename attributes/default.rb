@@ -1,5 +1,5 @@
 # OS Specific Attributes
-case platform_family
+case platform
 when 'rhel'
   default['freeradius']['user'] = 'radiusd'
   default['freeradius']['group'] = 'radiusd'
@@ -17,6 +17,7 @@ when 'rhel'
     default['freeradius']['ldap_pkgs'] = %w{ freeradius-ldap }
   end
 when 'debian'
+  default['freeradius']['repo'] = 'http://packages.networkradius.com/debian'
   default['freeradius']['user'] = 'freerad'
   default['freeradius']['group'] = 'freerad'
   default['freeradius']['dir'] = '/etc/freeradius'
@@ -24,10 +25,18 @@ when 'debian'
   default['freeradius']['logdir'] = '/var/log/freeradius'
   default['freeradius']['name'] = 'freeradius'
   default['freeradius']['libdir'] = '/usr/lib/freeradius'
-  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils libfreeradius2 freeradius-postgresql }
+  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils freeradius-config libfreeradius3 freeradius-postgresql freeradius-mysql freeradius-rest }
   default['freeradius']['ldap_pkgs'] = %w{ freeradius-ldap }
 when 'ubuntu'
-  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils libfreeradius2 freeradius-postgresql }
+  default['freeradius']['repo'] = 'ppa:freeradius/stable-3.0'
+  default['freeradius']['user'] = 'freerad'
+  default['freeradius']['group'] = 'freerad'
+  default['freeradius']['dir'] = '/etc/freeradius'
+  default['freeradius']['service'] = 'freeradius'
+  default['freeradius']['logdir'] = '/var/log/freeradius'
+  default['freeradius']['name'] = 'freeradius'
+  default['freeradius']['libdir'] = '/usr/lib/freeradius'
+  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils freeradius-config libfreeradius3 freeradius-postgresql freeradius-mysql freeradius-rest }
   default['freeradius']['ldap_pkgs'] = %w{ freeradius-ldap }
 else
   default['freeradius']['pkgs'] = %w{ }
@@ -53,6 +62,7 @@ default['freeradius']['enable_sql'] = true
 # Client File Config
 default['freeradius']['clients'] = {
   'localhost' => {
+    'proto' => '*',
     'ipaddr' => '127.0.0.1',
     'netmask' => '0',
     'secret' => 'default_secret',
@@ -65,7 +75,6 @@ default['freeradius']['enable_ldap'] = false
 default['freeradius']['ldap_server'] = 'ldap.example.com'
 default['freeradius']['ldap_port'] = '636'
 default['freeradius']['ldap_basedn'] = 'dc=example,dc=com'
-default['freeradius']['ldap_set_auth_type'] = 'yes'
 
 # Used for source installation
 default['freeradius']['url'] = "http://ftp.cc.uoc.gr/mirrors/ftp.freeradius.org/"

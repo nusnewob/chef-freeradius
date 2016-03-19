@@ -46,9 +46,9 @@ end
 default[:freeradius][:install_method] = "package"
 
 # Db vars
-default['freeradius']['db_type'] = "postgresql"
+default['freeradius']['db_type'] = "mysql"
 default['freeradius']['db_server'] = "localhost"
-default['freeradius']['db_port'] = "5432"
+default['freeradius']['db_port'] = "3306"
 default['freeradius']['db_name'] = "radius"
 default['freeradius']['db_login'] = "radius"
 default['freeradius']['db_password'] = "radius"

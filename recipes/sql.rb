@@ -20,6 +20,7 @@ mysql_connection_info = {
 node['freeradius']['db_schemas'].each do |sql|
   mysql_database node['freeradius']['db_name'] do
     connection mysql_connection_info
+    database_name node['freeradius']['db_name']
     sql "source #{sql};"
   end
 end

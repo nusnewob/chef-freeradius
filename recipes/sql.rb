@@ -10,16 +10,12 @@ link "#{node['freeradius']['dir']}/mods-enabled/sql" do
   notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end
 
-mysql_connection_info = {}
-user_auth = Chef::EncryptedDataBagItem.load("mysql", node['freeradius']['db_name'])
-user_auth['mysql'].each do |user, passwd|
-  mysql_connection_info = {
-    :host => node['freeradius']['db_server'],
-    :port => node['freeradius']['db_port'],
-    :username => user,
-    :password => passwd
-  }
-end
+mysql_connection_info = {
+  :host => node['freeradius']['db_server'],
+  :port => node['freeradius']['db_port'],
+  :username => node['freeradius']['db_login'],
+  :password => node['freeradius']['db_password']
+}
 
 node['freeradius']['db_schemas'].each do |sql|
   mysql_database node['freeradius']['db_name'] do

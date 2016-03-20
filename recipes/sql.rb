@@ -22,5 +22,6 @@ node['freeradius']['db_schemas'].each do |sql|
     connection mysql_connection_info
     database_name node['freeradius']['db_name']
     sql "source #{sql};"
+    action :query
   end
 end

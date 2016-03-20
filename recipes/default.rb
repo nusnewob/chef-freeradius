@@ -43,3 +43,9 @@ service node['freeradius']['service'] do
 end
 
 include_recipe "freeradius::vhost"
+
+ruby_block "remove cleartext password from node attribute" do
+  block do
+    node.rm('freeradius', 'db_password')
+  end
+end

@@ -10,6 +10,7 @@ link "#{node['freeradius']['dir']}/mods-enabled/sql" do
   notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end
 
+chef_gem 'mysql2'
 require 'mysql2'
 mysql_connection_info = {
   :host => node['freeradius']['db_server'],

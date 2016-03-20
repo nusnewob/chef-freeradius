@@ -10,15 +10,28 @@ link "#{node['freeradius']['dir']}/mods-enabled/sql" do
   notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end
 
-chef_gem 'mysql2'
-require 'mysql2'
-mysql_connection_info = {
-  :host => node['freeradius']['db_server'],
-  :port => node['freeradius']['db_port'],
-  :username => node['freeradius']['db_login'],
-  :password => node['freeradius']['db_password'],
-  :flags => (Mysql2::Client.default_query_options[:connect_flags] |= Mysql2::Client::MULTI_STATEMENTS)
-}
+mysql2_chef_gem 'default' do
+  gem_version '0.4.3'
+  action :install
+end
+
+chef_gem 'mysql2' do
+  compile_time false
+end
+
+mysql_connection_info = {}
+ruby_block "require mysql2" do
+  block do
+    require 'mysql2'
+    mysql_connection_info = {
+      :host => node['freeradius']['db_server'],
+      :port => node['freeradius']['db_port'],
+      :username => node['freeradius']['db_login'],
+      :password => node['freeradius']['db_password'],
+      :flags => (Mysql2::Client.default_query_options[:connect_flags] |= Mysql2::Client::MULTI_STATEMENTS)
+    }
+  end
+end
 
 unless node['freeradius']['db_configured']
   node['freeradius']['db_schemas'].each do |sql|

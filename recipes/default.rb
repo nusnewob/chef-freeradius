@@ -8,8 +8,10 @@
 #
 include_recipe "freeradius::#{node[:freeradius][:install_method]}"
 
-user_auth = EncryptedPasswords.new(node, node['freeradius']['db_databag_item'])
-node.override['freeradius']['db_password'] = user_auth.find_password(node['freeradius']['db_databag_item'], node['freeradius']['db_login'])
+unless node['freeradius']['skip_db_passwords']
+  user_auth = EncryptedPasswords.new(node, node['freeradius']['db_databag'])
+  node.override['freeradius']['db_password'] = user_auth.find_password(node['freeradius']['db_databag_item'], node['freeradius']['db_login'])
+end
 
 if node['freeradius']['enable_ldap'] == true
   include_recipe "freeradius::ldap"

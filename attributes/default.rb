@@ -87,6 +87,7 @@ default['freeradius']['ldap_port'] = '636'
 default['freeradius']['ldap_basedn'] = 'dc=example,dc=com'
 
 # password databag
+default['freeradius']['skip_db_passwords'] = false
 default['freeradius']['db_databag'] = 'mysql'
 default['freeradius']['db_databag_item'] = "#{node['freeradius']['db_name']}"
 

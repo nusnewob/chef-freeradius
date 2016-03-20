@@ -51,7 +51,7 @@ default['freeradius']['db_server'] = "localhost"
 default['freeradius']['db_port'] = "3306"
 default['freeradius']['db_name'] = "radius"
 default['freeradius']['db_login'] = "radius"
-default['freeradius']['db_password'] = Chef::EncryptedDataBagItem.load("mysql", node['freeradius']['db_name'])['mysql']["#{['freeradius']['db_login']}"]
+default['freeradius']['db_password'] = "radius"
 default['freeradius']['db_schemas'] = [
   "/etc/freeradius/mods-config/sql/main/mysql/schema.sql",
   "/etc/freeradius/mods-config/sql/counter/mysql/dailycounter.conf",
@@ -85,6 +85,10 @@ default['freeradius']['enable_ldap'] = false
 default['freeradius']['ldap_server'] = 'ldap.example.com'
 default['freeradius']['ldap_port'] = '636'
 default['freeradius']['ldap_basedn'] = 'dc=example,dc=com'
+
+# password databag
+default['freeradius']['db_databag'] = 'mysql'
+default['freeradius']['db_databag_item'] = "#{node['freeradius']['db_name']}"
 
 # Used for source installation
 default['freeradius']['url'] = "http://ftp.cc.uoc.gr/mirrors/ftp.freeradius.org/"

@@ -8,6 +8,12 @@
 #
 include_recipe "freeradius::#{node[:freeradius][:install_method]}"
 
+user_auth = Chef::EncryptedDataBagItem.load(node['freeradius']['db_databag'], node['freeradius']['db_databag_item'])
+user_auth['mysql'].each do |user, passwd|
+  node.override['freeradius']['db_login'] = user
+  node.override['freeradius']['db_password'] = passwd
+end
+
 if node['freeradius']['enable_ldap'] == true
   include_recipe "freeradius::ldap"
 end

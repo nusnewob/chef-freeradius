@@ -54,12 +54,7 @@ default['freeradius']['db_login'] = "radius"
 default['freeradius']['db_password'] = "radius"
 default['freeradius']['db_schemas'] = [
   "/etc/freeradius/mods-config/sql/main/mysql/schema.sql",
-  "/etc/freeradius/mods-config/sql/counter/mysql/dailycounter.conf",
-  "/etc/freeradius/mods-config/sql/counter/mysql/expire_on_login.conf",
-  "/etc/freeradius/mods-config/sql/counter/mysql/monthlycounter.conf",
-  "/etc/freeradius/mods-config/sql/counter/mysql/noresetcounter.conf",
   "/etc/freeradius/mods-config/sql/cui/mysql/schema.sql",
-  "/etc/freeradius/mods-config/sql/ippool/mysql/schema.sql",
   "/etc/freeradius/mods-config/sql/ippool-dhcp/mysql/schema.sql"
 ]
 

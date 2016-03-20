@@ -54,7 +54,6 @@ default['freeradius']['db_login'] = "radius"
 default['freeradius']['db_password'] = Chef::EncryptedDataBagItem.load("mysql", node['freeradius']['db_name'])['mysql']["#{['freeradius']['db_login']}"]
 default['freeradius']['db_schemas'] = [
   "/etc/freeradius/mods-config/sql/main/mysql/schema.sql",
-  "/etc/freeradius/mods-config/sql/main/mysql/setup.sql",
   "/etc/freeradius/mods-config/sql/counter/mysql/dailycounter.conf",
   "/etc/freeradius/mods-config/sql/counter/mysql/expire_on_login.conf",
   "/etc/freeradius/mods-config/sql/counter/mysql/monthlycounter.conf",

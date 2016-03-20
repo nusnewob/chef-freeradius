@@ -19,19 +19,20 @@ chef_gem 'mysql2' do
   compile_time false
 end
 
-mysql_connection_info = {}
 ruby_block "require mysql2" do
   block do
     require 'mysql2'
-    mysql_connection_info = {
-      :host => node['freeradius']['db_server'],
-      :port => node['freeradius']['db_port'],
-      :username => node['freeradius']['db_login'],
-      :password => node['freeradius']['db_password'],
-      :flags => (Mysql2::Client.default_query_options[:connect_flags] |= Mysql2::Client::MULTI_STATEMENTS)
-    }
+    node.run_state['mysql_flags'] = (Mysql2::Client.default_query_options[:connect_flags] |= Mysql2::Client::MULTI_STATEMENTS)
   end
 end
+
+mysql_connection_info = {
+  :host => node['freeradius']['db_server'],
+  :port => node['freeradius']['db_port'],
+  :username => node['freeradius']['db_login'],
+  :password => node['freeradius']['db_password'],
+  :flags => node.run_state['mysql_flags']
+}
 
 unless node['freeradius']['db_configured']
   node['freeradius']['db_schemas'].each do |sql|

@@ -43,7 +43,7 @@ else
   default['freeradius']['ldap_pkgs'] = %w{ }
 end
 
-default[:freeradius][:install_method] = "package"
+default['freeradius']['install_method'] = "package"
 
 # Db vars
 default['freeradius']['db_type'] = "mysql"
@@ -62,7 +62,7 @@ default['freeradius']['db_schemas'] = [
 default['freeradius']['local_secret'] = "testing1234"
 default['freeradius']['enable_remote_clients'] = true
 default['freeradius']['remote_secret'] = "remote1234"
-default['freeradius']['enable_sql'] = true
+default['freeradius']['enable_sql'] = false
 
 # Client File Config
 default['freeradius']['clients'] = {
@@ -84,7 +84,7 @@ default['freeradius']['ldap_basedn'] = 'dc=example,dc=com'
 # password databag
 default['freeradius']['skip_db_passwords'] = false
 default['freeradius']['db_databag'] = 'mysql'
-default['freeradius']['db_databag_item'] = "#{node['freeradius']['db_name']}"
+default['freeradius']['db_databag_item'] = node['freeradius']['db_name']
 
 # Used for source installation
 default['freeradius']['url'] = "http://ftp.cc.uoc.gr/mirrors/ftp.freeradius.org/"

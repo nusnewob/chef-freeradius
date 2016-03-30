@@ -25,7 +25,8 @@ when 'debian'
   default['freeradius']['logdir'] = '/var/log/freeradius'
   default['freeradius']['name'] = 'freeradius'
   default['freeradius']['libdir'] = '/usr/lib/freeradius'
-  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils freeradius-config libfreeradius3 freeradius-postgresql freeradius-mysql freeradius-rest }
+  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils freeradius-config libfreeradius3 }
+  default['freeradius']['sql_pkgs'] = %w{ freeradius-postgresql freeradius-mysql }
   default['freeradius']['ldap_pkgs'] = %w{ freeradius-ldap }
 when 'ubuntu'
   default['freeradius']['repo'] = 'ppa:freeradius/stable-3.0'
@@ -36,7 +37,8 @@ when 'ubuntu'
   default['freeradius']['logdir'] = '/var/log/freeradius'
   default['freeradius']['name'] = 'freeradius'
   default['freeradius']['libdir'] = '/usr/lib/freeradius'
-  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils freeradius-config libfreeradius3 freeradius-postgresql freeradius-mysql freeradius-rest }
+  default['freeradius']['pkgs'] = %w{ freeradius freeradius-common freeradius-utils freeradius-config libfreeradius3 }
+  default['freeradius']['sql_pkgs'] = %w{ freeradius-postgresql freeradius-mysql }
   default['freeradius']['ldap_pkgs'] = %w{ freeradius-ldap }
 else
   default['freeradius']['pkgs'] = %w{ }

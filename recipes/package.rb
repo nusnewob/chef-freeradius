@@ -29,3 +29,11 @@ if node['freeradius']['enable_ldap'] == true
     end
   end
 end
+
+if node['freeradius']['enable_sql'] == true
+  node['freeradius']['sql_pkgs'].each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
+end

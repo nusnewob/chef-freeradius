@@ -144,9 +144,7 @@ authorize {
 	#  is meant to mirror the "users" file.
 	#
 	#  See "Authorization Queries" in sql.conf
-<% if node['freeradius']['enable_sql'] %>
-  sql
-<% end %>
+  #sql
 
 	#
 	#  If you are using /etc/smbpasswd, and are also doing

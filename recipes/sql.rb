@@ -10,7 +10,7 @@ link "#{node['freeradius']['dir']}/mods-enabled/sql" do
   notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end
 
-if node['freeradius']['run_sql'] do
+if node['freeradius']['run_sql']
 
   mysql2_chef_gem 'default' do
     gem_version '0.4.3'

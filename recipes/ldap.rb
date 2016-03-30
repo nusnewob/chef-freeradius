@@ -1,3 +1,11 @@
+if node['freeradius']['enable_ldap'] == true
+  node['freeradius']['ldap_pkgs'].each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
+end
+
 template "#{node['freeradius']['dir']}/mods-available/ldap" do
   source "ldap.erb"
   owner node['freeradius']['user']

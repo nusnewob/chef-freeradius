@@ -21,19 +21,3 @@ node['freeradius']['pkgs'].each do |pkg|
     action :install
   end
 end
-
-if node['freeradius']['enable_ldap'] == true
-  node['freeradius']['ldap_pkgs'].each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
-end
-
-if node['freeradius']['enable_sql'] == true
-  node['freeradius']['sql_pkgs'].each do |pkg|
-    package pkg do
-      action :install
-    end
-  end
-end

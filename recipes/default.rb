@@ -13,14 +13,6 @@ unless node['freeradius']['skip_db_passwords']
   node.override['freeradius']['db_password'] = user_auth.find_password(node['freeradius']['db_databag_item'], node['freeradius']['db_login'])
 end
 
-if node['freeradius']['enable_ldap'] == true
-  include_recipe "freeradius::ldap"
-end
-
-if node['freeradius']['enable_sql'] == true
-  include_recipe "freeradius::sql"
-end
-
 template "#{node['freeradius']['dir']}/clients.conf" do
   source "clients.conf.erb"
   owner node['freeradius']['user']
@@ -40,6 +32,14 @@ end
 service node['freeradius']['service'] do
   supports :restart => true, :status => true, :reload => true
   action [:enable, :start]
+end
+
+if node['freeradius']['enable_ldap'] == true
+  include_recipe "freeradius::ldap"
+end
+
+if node['freeradius']['enable_sql'] == true
+  include_recipe "freeradius::sql"
 end
 
 include_recipe "freeradius::vhost"

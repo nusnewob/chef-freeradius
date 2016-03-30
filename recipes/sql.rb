@@ -1,3 +1,11 @@
+if node['freeradius']['enable_sql'] == true
+  node['freeradius']['sql_pkgs'].each do |pkg|
+    package pkg do
+      action :install
+    end
+  end
+end
+
 template "#{node['freeradius']['dir']}/mods-available/sql" do
   source "sql.erb"
   owner node['freeradius']['user']

@@ -55,7 +55,7 @@ default['freeradius']['db_password'] = "radius"
 default['freeradius']['db_schemas'] = [
   "/etc/freeradius/mods-config/sql/main/mysql/schema.sql",
   "/etc/freeradius/mods-config/sql/cui/mysql/schema.sql",
-  "/etc/freeradius/mods-config/sql/ippool-dhcp/mysql/schema.sql"
+  "/etc/freeradius/mods-config/sql/ippool/mysql/schema.sql"
 ]
 
 # Client Config
@@ -63,12 +63,13 @@ default['freeradius']['local_secret'] = "testing1234"
 default['freeradius']['enable_remote_clients'] = true
 default['freeradius']['remote_secret'] = "remote1234"
 default['freeradius']['enable_sql'] = false
+default['freeradius']['run_sql'] = false
 
 # Client File Config
 default['freeradius']['clients'] = {
   'localhost' => {
     'proto' => '*',
-    'ipaddr' => '127.0.0.1',
+    'ipaddr' => '*',
     'netmask' => '0',
     'secret' => 'default_secret',
     'nastype' => 'other'

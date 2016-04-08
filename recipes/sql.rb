@@ -7,18 +7,34 @@ if node['freeradius']['enable_sql'] == true
 end
 
 template "#{node['freeradius']['dir']}/mods-available/sql" do
-  source "sql.erb"
+  source "mod-sql.erb"
   owner node['freeradius']['user']
   group node['freeradius']['group']
   mode 0600
 end
 
-link "#{node['freeradius']['dir']}/mods-enabled/sql" do
-  to "#{node['freeradius']['dir']}/mods-available/sql"
-  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+template "#{node['freeradius']['dir']}/mods-available/sqlcounter" do
+  source "mod-sqlcounter.erb"
+  owner node['freeradius']['user']
+  group node['freeradius']['group']
+  mode 0600
 end
 
-if node['freeradius']['run_sql']
+template "#{node['freeradius']['dir']}/mods-available/sqlippool" do
+  source "mod-sqlippool.erb"
+  owner node['freeradius']['user']
+  group node['freeradius']['group']
+  mode 0600
+end
+
+template "#{node['freeradius']['dir']}/mods-available/cui" do
+  source "mod-cui.erb"
+  owner node['freeradius']['user']
+  group node['freeradius']['group']
+  mode 0600
+end
+
+if ( node['freeradius']['run_sql'] && !(node['freeradius']['db_configured']) )
 
   mysql2_chef_gem 'default' do
     gem_version '0.4.3'
@@ -61,4 +77,22 @@ if node['freeradius']['run_sql']
     end
   end
 
+end
+
+link "#{node['freeradius']['dir']}/mods-enabled/sql" do
+  to "#{node['freeradius']['dir']}/mods-available/sql"
+  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+end
+
+link "#{node['freeradius']['dir']}/mods-enabled/sqlcounter" do
+  to "#{node['freeradius']['dir']}/mods-available/sqlcounter"
+  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+end
+link "#{node['freeradius']['dir']}/mods-enabled/sqlippool" do
+  to "#{node['freeradius']['dir']}/mods-available/sqlippool"
+  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+end
+link "#{node['freeradius']['dir']}/mods-enabled/cui" do
+  to "#{node['freeradius']['dir']}/mods-available/cui"
+  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end

@@ -1,0 +1,61 @@
+sql {
+  dialect = "<%= node['freeradius']['db_type'] %>"
+  driver = "rlm_sql_${dialect}"
+
+  server = "<%= node['freeradius']['db_server'] %>"
+	port = "<%= node['freeradius']['db_port'] %>"
+	login = "<%= node['freeradius']['db_login'] %>"
+	password = "<%= node['freeradius']['db_password'] %>"
+	radius_db = "<%= node['freeradius']['db_name'] %>"
+
+  pool {
+    start = ${thread[pool].start_servers}
+    min = ${thread[pool].min_spare_servers}
+    max = ${thread[pool].max_servers}
+    spare = ${thread[pool].max_spare_servers}
+    uses = 0
+    retry_delay = 30
+    lifetime = 0
+    idle_timeout = 30
+  }
+
+  # If you want both stop and start records logged to the
+  # same SQL table, leave this as is.  If you want them in
+  # different tables, put the start table in acct_table1
+  # and stop table in acct_table2
+  acct_table1 = "radacct"
+  acct_table2 = "radacct"
+
+  # Allow for storing data after authentication
+  postauth_table = "radpostauth"
+
+  # Tables containing 'check' items
+  authcheck_table = "radcheck"
+  groupcheck_table = "radgroupcheck"
+
+  # Tables containing 'reply' items
+  authreply_table = "radreply"
+  groupreply_table = "radgroupreply"
+
+  # Table to keep group info
+  usergroup_table = "radusergroup"
+
+  # If set to 'yes' (default) we read the group tables unless Fall-Through = no in the reply table.
+  # If set to 'no' we do not read the group tables unless Fall-Through = yes in the reply table.
+  read_groups = yes
+
+  # If set to 'yes' (default) we read profiles unless Fall-Through = no in the groupreply table.
+  # If set to 'no' we do not read profiles unless Fall-Through = yes in the groupreply table.
+  read_profiles = yes
+
+  # Remove stale session if checkrad does not see a double login
+  delete_stale_sessions = yes
+
+  #logfile = ${logdir}/sqllog.sql
+  query_timeout = 30
+  #read_clients = yes
+  client_table = "nas"
+  group_attribute = "SQL-Group"
+
+  $INCLUDE ${modconfdir}/${.:name}/main/${dialect}/queries.conf
+}

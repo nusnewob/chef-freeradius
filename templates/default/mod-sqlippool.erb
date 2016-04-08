@@ -1,0 +1,18 @@
+sqlippool {
+	sql_module_instance = "sql"
+	dialect = "<%= node['freeradius']['db_type'] %>"
+	ippool_table = "radippool"
+	lease_duration = 3600
+	#ipv6 = yes
+	pool_key = "%{NAS-Port}"
+
+	messages {
+		exists = "Existing IP: %{reply:Framed-IP-Address} (did %{Called-Station-Id} cli %{Calling-Station-Id} port %{NAS-Port} user %{User-Name})"
+		success = "Allocated IP: %{reply:Framed-IP-Address} from %{control:Pool-Name} (did %{Called-Station-Id} cli %{Calling-Station-Id} port %{NAS-Port} user %{User-Name})"
+		clear = "Released IP %{Framed-IP-Address} (did %{Called-Station-Id} cli %{Calling-Station-Id} user %{User-Name})"
+		failed = "IP Allocation FAILED from %{control:Pool-Name} (did %{Called-Station-Id} cli %{Calling-Station-Id} port %{NAS-Port} user %{User-Name})"
+		nopool = "No Pool-Name defined (did %{Called-Station-Id} cli %{Calling-Station-Id} port %{NAS-Port} user %{User-Name})"
+	}
+
+	$INCLUDE ${modconfdir}/sql/ippool/${dialect}/queries.conf
+}

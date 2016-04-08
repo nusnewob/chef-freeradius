@@ -8,11 +8,6 @@
 #
 include_recipe "freeradius::#{node[:freeradius][:install_method]}"
 
-unless node['freeradius']['skip_db_passwords']
-  user_auth = EncryptedPasswords.new(node, node['freeradius']['db_databag'])
-  node.override['freeradius']['db_password'] = user_auth.find_password(node['freeradius']['db_databag_item'], node['freeradius']['db_login'])
-end
-
 template "#{node['freeradius']['dir']}/clients.conf" do
   source "clients.conf.erb"
   owner node['freeradius']['user']
@@ -47,5 +42,7 @@ include_recipe "freeradius::vhost"
 ruby_block "remove cleartext password from node attribute" do
   block do
     node.rm('freeradius', 'db_password')
+    node.rm('freeradius', 'secret')
+    node.rm('freeradius', 'clients')
   end
 end

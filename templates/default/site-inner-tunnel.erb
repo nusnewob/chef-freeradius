@@ -1,0 +1,98 @@
+server inner-tunnel {
+  listen {
+    ipaddr = 127.0.0.1
+    port = 18120
+    type = auth
+  }
+
+  authorize {
+    filter_username
+    #	filter_inner_identity
+    chap
+    mschap
+    #	unix
+    #	IPASS
+    suffix
+    #	ntdomain
+    update control {
+      &Proxy-To-Realm := LOCAL
+    }
+    eap {
+      ok = return
+    }
+    # files
+    <% if node['freeradius']['enable_sql'] %>
+	  sql
+		<% end %>
+    # smbpasswd
+    <% if node['freeradius']['enable_ldap'] %>
+	  ldap
+		<% end %>
+    #	daily
+    expiration
+    logintime
+    pap
+  }
+
+  authenticate {
+    Auth-Type PAP {
+      pap
+    }
+    Auth-Type CHAP {
+      chap
+    }
+    Auth-Type MS-CHAP {
+      mschap
+    }
+    # pam
+    <% if node['freeradius']['enable_ldap'] %>
+    Auth-Type LDAP {
+    	ldap
+    }
+    <% end %>
+    eap
+  }
+
+  session {
+    # radutmp
+    <% if node['freeradius']['enable_sql'] %>
+	  sql
+		<% end %>
+  }
+
+  post-auth {
+    # cui-inner
+    # reply_log
+    <% if node['freeradius']['enable_sql'] %>
+	  sql
+		<% end %>
+    # sql_log
+    <% if node['freeradius']['enable_ldap'] %>
+	  ldap
+		<% end %>
+    # update {
+    # 	&outer.session-state: += &reply:
+    # }
+    Post-Auth-Type REJECT {
+      <% if node['freeradius']['enable_sql'] %>
+  	  sql
+  		<% end %>
+      attr_filter.access_reject
+      update outer.session-state {
+        &Module-Failure-Message := &request:Module-Failure-Message
+      }
+    }
+  }
+
+  pre-proxy {
+    #	files
+    #	attr_filter.pre-proxy
+    #	pre_proxy_log
+  }
+
+  post-proxy {
+    #	post_proxy_log
+    #	attr_filter.post-proxy
+    eap
+  }
+}

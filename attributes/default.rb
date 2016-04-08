@@ -61,9 +61,8 @@ default['freeradius']['db_schemas'] = [
 ]
 
 # Client Config
-default['freeradius']['local_secret'] = "testing1234"
+default['freeradius']['secret'] = "testing1234"
 default['freeradius']['enable_remote_clients'] = true
-default['freeradius']['remote_secret'] = "remote1234"
 default['freeradius']['enable_sql'] = false
 default['freeradius']['run_sql'] = false
 
@@ -73,7 +72,7 @@ default['freeradius']['clients'] = {
     'proto' => '*',
     'ipaddr' => '*',
     'netmask' => '0',
-    'secret' => 'default_secret',
+    'secret' => node['freeradius']['secret'],
     'nastype' => 'other'
   }
 }
@@ -83,11 +82,8 @@ default['freeradius']['enable_ldap'] = false
 default['freeradius']['ldap_server'] = 'ldap.example.com'
 default['freeradius']['ldap_port'] = '636'
 default['freeradius']['ldap_basedn'] = 'dc=example,dc=com'
-
-# password databag
-default['freeradius']['skip_db_passwords'] = false
-default['freeradius']['db_databag'] = 'mysql'
-default['freeradius']['db_databag_item'] = node['freeradius']['db_name']
+default['freeradius']['ldap_identity'] = 'dc=example,dc=com'
+default['freeradius']['ldap_password'] = 'ldap_password'
 
 # Used for source installation
 default['freeradius']['url'] = "http://ftp.cc.uoc.gr/mirrors/ftp.freeradius.org/"

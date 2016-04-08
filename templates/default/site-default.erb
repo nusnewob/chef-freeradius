@@ -1,0 +1,166 @@
+server default {
+	listen {
+		type = auth
+		ipaddr = *
+		port = 0
+		limit {
+			max_connections = 2048
+			lifetime = 0
+			idle_timeout = 30
+		}
+	}
+
+	listen {
+		type = acct
+		ipaddr = *
+		port = 0
+		limit {
+			# max_pps = 0
+			idle_timeout = 30
+			lifetime = 0
+			max_connections = 2048
+		}
+	}
+
+	authorize {
+		filter_username
+		filter_password
+		preprocess
+		# operator-name
+		cui
+		# auth_log
+		chap
+		mschap
+		digest
+		# wimax
+		# IPASS
+		suffix
+		# ntdomain
+		eap {
+			ok = return
+		}
+		# unix
+		# files
+		<% if node['freeradius']['enable_sql'] %>
+	  sql
+		<% end %>
+		# smbpasswd
+		<% if node['freeradius']['enable_ldap'] %>
+	  ldap
+		<% end %>
+		# daily
+		expiration
+		logintime
+		pap
+		# Autz-Type Status-Server {}
+	}
+
+	authenticate {
+		Auth-Type PAP {
+			pap
+		}
+		Auth-Type CHAP {
+			chap
+		}
+		Auth-Type MS-CHAP {
+			mschap
+		}
+		digest
+		# pam
+		<% if node['freeradius']['enable_ldap'] %>
+		Auth-Type LDAP {
+			ldap
+		}
+		<% end %>
+		eap
+	}
+
+	preacct {
+		preprocess
+		# acct_counters64
+		# update request {
+		#   FreeRADIUS-Acct-Session-Start-Time = "%{expr: %l - %{%{Acct-Session-Time}:-0} - %{%{Acct-Delay-Time}:-0}}"
+		# }
+		acct_unique
+		# IPASS
+		suffix
+		# ntdomain
+		# files
+	}
+
+	accounting {
+		cui
+		detail
+		# daily
+		# unix
+		# radutmp
+		# sradutmp
+		# main_pool
+		<% if node['freeradius']['enable_sql'] %>
+	  sql
+		<% end %>
+		if (noop) {
+			ok
+		}
+		# sql_log
+		# pgsql-voip
+		exec
+		attr_filter.accounting_response
+		# Acct-Type Status-Server {}
+	}
+
+	session {
+		# radutmp
+		<% if node['freeradius']['enable_sql'] %>
+	  sql
+		<% end %>
+	}
+
+	post-auth {
+		# if (!&reply:State) {
+		# 	update reply {
+		# 		State := "0x%{randstr:16h}"
+		# 	}
+		# }
+		update {
+			&reply: += &session-state:
+		}
+		# main_pool
+		cui
+		<% if node['freeradius']['enable_sql'] %>
+	  sql
+		<% end %>
+		# sql_log
+		<% if node['freeradius']['enable_ldap'] %>
+	  ldap
+		<% end %>
+		exec
+		# wimax
+		remove_reply_message_if_eap
+		Post-Auth-Type REJECT {
+			<% if node['freeradius']['enable_sql'] %>
+		  sql
+			<% end %>
+			attr_filter.access_reject
+			eap
+			remove_reply_message_if_eap
+		}
+	}
+
+	pre-proxy {
+		#	operator-name
+		#	cui
+		#	files
+		#	attr_filter.pre-proxy
+		#	pre_proxy_log
+	}
+
+	post-proxy {
+		#	post_proxy_log
+		#	attr_filter.post-proxy
+		eap
+		#	Post-Proxy-Type Fail-Accounting {
+		#			detail
+		#	}
+	}
+}

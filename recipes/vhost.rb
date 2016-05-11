@@ -3,7 +3,6 @@ template "#{node['freeradius']['dir']}/sites-available/default" do
   owner node['freeradius']['user']
   group node['freeradius']['group']
   mode 0600
-  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end
 
 template "#{node['freeradius']['dir']}/sites-available/inner-tunnel" do
@@ -11,7 +10,6 @@ template "#{node['freeradius']['dir']}/sites-available/inner-tunnel" do
   owner node['freeradius']['user']
   group node['freeradius']['group']
   mode 0600
-  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end
 
 template "#{node['freeradius']['dir']}/sites-available/status" do
@@ -19,5 +17,19 @@ template "#{node['freeradius']['dir']}/sites-available/status" do
   owner node['freeradius']['user']
   group node['freeradius']['group']
   mode 0600
+end
+
+link "#{node['freeradius']['dir']}/sites-enabled/default" do
+  to "#{node['freeradius']['dir']}/sites-available/default"
+  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+end
+
+link "#{node['freeradius']['dir']}/sites-enabled/inner-tunnel" do
+  to "#{node['freeradius']['dir']}/sites-available/inner-tunnel"
+  notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
+end
+
+link "#{node['freeradius']['dir']}/sites-enabled/status" do
+  to "#{node['freeradius']['dir']}/sites-available/status"
   notifies :restart, "service[#{node['freeradius']['service']}]", :immediately
 end

@@ -47,6 +47,10 @@ end
 
 default['freeradius']['install_method'] = "package"
 
+# Local admin access
+default['freeradius']['admin']['port'] = "18121"
+default['freeradius']['admin']['secret'] = "adminsecret"
+
 # Db vars
 default['freeradius']['db_type'] = "mysql"
 default['freeradius']['db_server'] = "localhost"

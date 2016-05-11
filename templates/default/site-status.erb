@@ -1,0 +1,17 @@
+server status {
+  listen {
+    type = status
+    ipaddr = 127.0.0.1
+    port = <%= node['freeradius']['admin']['port'] %>
+  }
+
+  client admin {
+    ipaddr = 127.0.0.1
+    secret = <%= node['freeradius']['admin']['secret'] %>
+  }
+
+  authorize {
+    ok
+    Autz-Type Status-Server { ok }
+  }
+}

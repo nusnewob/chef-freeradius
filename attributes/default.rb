@@ -89,6 +89,10 @@ default['freeradius']['ldap_basedn'] = 'dc=example,dc=com'
 default['freeradius']['ldap_identity'] = 'dc=example,dc=com'
 default['freeradius']['ldap_password'] = 'ldap_password'
 
+# Counter
+default['freeradius']['enable_counter'] = false
+default['freeradius']['counter']['Max-Daily-Session'] = 3600
+
 # Used for source installation
 default['freeradius']['url'] = "http://ftp.cc.uoc.gr/mirrors/ftp.freeradius.org/"
 default['freeradius']['version'] = "2.1.10"

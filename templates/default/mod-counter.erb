@@ -1,4 +1,5 @@
 counter daily {
+  DEFAULT Max-Daily-Session := <%= node['freeradius']['counter']['Max-Daily-Session'] %>
   filename = ${db_dir}/db.daily
   key = User-Name
   count_attribute = Acct-Session-Time
